@@ -1,90 +1,15 @@
 // ============================== TABLE OF CONTENTS ==============================
-// 01. Map Functions
-// 02. Location Functions
-// 03. Weather Functions
-// 04. Toolbar Animations
-// TODO: 05. Places Functions
-// 06. Farmers Market Functions 
+// 01. Weather Functions
+// 02. Fade Animations
+// 03. Farmers Market Functions
+// 04. Places Functions
+// 05. Search Functions
 // ============================== TABLE OF CONTENTS ==============================
 
-// --------- 01. MAP FUNCTIONS ------------------
-// Display map on page and find location
-var map, infoWindow;
-
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 6
-    });
-    infoWindow = new google.maps.InfoWindow;
-
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('You');
-            infoWindow.open(map);
-            map.setCenter(pos);
-        }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
-}
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
-        'Error: Your browser doesn\'t support geolocation.');
-    infoWindow.open(map);
-}
-
-// --- 02. LOCATION FUNCTIONS ---
-function decodeLocation() {
-    var api_key = 'AIzaSyBYvm6i_3YLimMJdS6BAHLKWLW9g723m8o';
-    // Use google maps geolocation api to retrieve exact coordinates
-    navigator.geolocation.getCurrentPosition(function(position) {
-        // Position object, includes latitude and longitude
-        var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-        };
-        // Define latlng parameter using a variable
-        var latlng = pos.lat + ',' + pos.lng;
-        console.log(latlng);
-        // Structure URL
-        var queryURL = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latlng + '&result_type=street_address' + '&key=' + api_key;
-        // Begin ajax call 
-        $.ajax({
-            url: queryURL,
-            method: 'GET'
-        }).done(function(response) {
-            // Loop through JSON object to retrieve desired response result
-            for (var i = 0; i < response.results.length; i++) {
-                // Define address using JSON object
-                var address = response.results[i].formatted_address;
-                // Write address to page
-                $('#location').html(address);
-            }
-        });
-    });
-}
-decodeLocation();
-
-// ----------- 03. WEATHER FUNCTIONS -------------
+// -------- 01. WEATHER FUNCTIONS --------
 function getWeather() {
     var api_key = "e1d9840d8542ded69ac25a4b5ffc320b";
     navigator.geolocation.getCurrentPosition(function (position) {
-
         var pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
@@ -107,13 +32,13 @@ function getWeather() {
             url: queryURL,
             method: 'GET',
             data: data
-        }).done(function(response) {
+        }).done(function (response) {
             // Loop through JSON response object
             for (var i = 0; i < response.weather.length; i++) {
                 //Weather Icon Code
                 var weatherIcon = response.weather[i].icon;
                 //Weather Icon Actual Image File
-                var iconImage = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+                var iconImage = "https://openweathermap.org/img/w/" + weatherIcon + ".png";
                 // Create image div
                 var img = $('<img>');
                 // Add iconImage class
@@ -136,54 +61,48 @@ function getWeather() {
 }
 getWeather();
 
-// -------- 04. TOOLBAR ANIMATIONS ----------
+// -------- 02. FADE ANIMATIONS --------
 // Show / hide toolbars on map click
 $('#map')
-  // Fade toolbar out on mouse down
-  .mousedown(function(){
-    // I'm gonna use css transitions for this because jQuery fades have built in timeouts that we don't want
-    $('.topbar, .toolbar').css("opacity", 0);
-    $('.card.blue-ish.darken-1').css('background-color', 'rgba(84, 110, 122, 0.35)');
-    $("#login-options, #settings-options").fadeOut();
-  });
-  // Fade toolbar in on mouse up - even if mouse up event isn't over map
-$(document).mouseup(function(){
-    $('.topbar, .toolbar').css("opacity", "");
-    $('.card.blue-ish.darken-1').css('background-color', '');
-  });
+    // Fade toolbar out on mouse down
+    .mousedown(function () {
+        // I'm gonna use css transitions for this because jQuery fades have built in timeouts that we don't want
+        $('.blue-ish').css('background-color', 'rgba(84, 110, 122, 0.35)');
+        $("#login-options, #settings-options").fadeOut();
+    });
+// Fade toolbar in on mouse up - even if mouse up event isn't over map
+$(document).mouseup(function () {
+    $('.blue-ish').css('background-color', '');
+});
 
-
-// -------- 05. FARMERS MARKET FUNCTIONS --------
-
-function getFarmers(lat, lng){
-
-  navigator.geolocation.getCurrentPosition(function(position){
-    var pos = {
+// -------- 03. FARMERS MARKET FUNCTIONS --------
+function getFarmers(lat, lng) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
         };
-    var lat = pos.lat;
-    var lng = pos.lng;
-    console.log(lat);
-    console.log(lng);    
-    var queryURL = 'https://search.ams.usda.gov/farmersmarkets/v1/data.svc/locSearch?lat=' + lat + '&lng=' + lng;
-    $.ajax({
-      method: 'GET',
-      contentType: 'application/json; charset=utf-8',
-      url: queryURL,
-      dataType: 'jsonp',
-      jsonpCallback: 'detailResultsHandler'
-    }).done(function(response){
-     for (var i = 0; i < 3; i++){
-      var markets = response.results[i].marketname;
-      $('#farmersData').append('<p style="color: black;"><strong>Miles: </strong></p>' + markets + '<br>');
-     }
-  });
-});
+        var lat = pos.lat;
+        var lng = pos.lng;
+        var queryURL = 'https://search.ams.usda.gov/farmersmarkets/v1/data.svc/locSearch?lat=' + lat + '&lng=' + lng;
+        $.ajax({
+            method: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            url: queryURL,
+            dataType: 'jsonp',
+            jsonpCallback: 'detailResultsHandler'
+        }).done(function (response) {
+            for (var i = 0; i < 3; i++) {
+                var markets = response.results[i].marketname;
+                $('#farmersData').append('<p style="color: black;"><strong>Miles: </strong></p>' + markets + '<br>');
+            }
+        });
+    });
 }
 getFarmers();
 
-      
+// -------- 04. PLACES (PINS) FUNCTIONS --------
+// Display address in widget
 function populateLocationWidget(pos) {
     var google_places_api_key = 'AIzaSyBYvm6i_3YLimMJdS6BAHLKWLW9g723m8o';
     // Structure URL
@@ -204,6 +123,7 @@ function populateLocationWidget(pos) {
     });
 }
 
+// Map with pins
 function initMapLocationPlaces() {
     navigator.geolocation.getCurrentPosition(function (position) {
         var pos = {
@@ -213,7 +133,8 @@ function initMapLocationPlaces() {
         populateLocationWidget(pos);
         map = new google.maps.Map(document.getElementById('map'), {
             center: pos,
-            zoom: 15
+            zoom: 15,
+            mapTypeId: 'terrain'
         });
 
         infowindow = new google.maps.InfoWindow();
@@ -221,9 +142,9 @@ function initMapLocationPlaces() {
         service.nearbySearch({
             location: pos,
             radius: 500,
-            type: ['store']
+            type: ['store', 'restaurant']
         }, callback);
-    }); // need to add error handling. what if you never got the location? What will you do
+    });
 }
 
 function callback(results, status) {
@@ -234,15 +155,122 @@ function callback(results, status) {
     }
 }
 
+var gmarkers = [];
+
 function createMarker(place) {
+    var marker;
     var placeLoc = place.geometry.location;
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         map: map,
-        position: place.geometry.location
+        position: placeLoc
     });
+
+    function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+    marker.setMap(map);
+    marker.addListener('click', toggleBounce);
+    gmarkers.push(marker);
     google.maps.event.addListener(marker, 'click', function () {
-        infowindow.setContent(place.name);
+        var content = "<div>";
+        if (place.hasOwnProperty('name')) {
+            content += '<strong>' + place.name + '</strong><br>';
+        }
+        if (place.hasOwnProperty('opening_hours')) {
+            var openNow = place.opening_hours.open_now ? "yes" : "no";
+            content += 'Open Now: ' + openNow + '<br>';
+        }
+        if (place.hasOwnProperty('vicinity')) {
+            var typs = place.vicinity;
+            content += 'Address:' + place.vicinity;
+        }
+        content += "</div>";
+        infowindow.setContent(content);
         infowindow.open(map, this);
     });
 }
 
+// Clear markers
+function clearMarkers() {
+    for (var i = 0; i < gmarkers.length; i++) {
+        if (gmarkers[i].setMap) {
+            gmarkers[i].setMap(null);
+        }
+    }
+    gmarkers = [];
+}
+
+// Map Marker Recenter Function
+$('.mapMarker').on('click', function () {
+    initMapLocationPlaces();
+});
+
+// ---- 05. SEARCH FUNCTIONS -----
+// Search submit listeners
+$('#submit').on('click', function (event) {
+    event.preventDefault();
+    var keyword = $('#pac-input').val().trim();
+    addHistory(keyword);
+    searchFor(keyword);
+    $('.searchbar').toggle(400);
+});
+// History search function
+$("#history-bar").on("click", "p", function(){
+    searchFor( $(this).attr("data-search") );
+});
+// Toggle search input
+$('.searchicon').on('click', function(){
+    $('.searchbar').toggle(400);
+});
+
+// Search result function
+function searchFor(keyword){
+    clearMarkers();
+    var pos;
+    var queryURL;
+    var api_key = 'AIzaSyBYvm6i_3YLimMJdS6BAHLKWLW9g723m8o';
+    var apiURL = 'https://proxy-cbc.herokuapp.com/proxy';
+    var radius = 5000;
+    var type = ['restaurant', 'store'];
+    navigator.geolocation.getCurrentPosition(function (position) {
+        pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+        queryURL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + pos.lat + ',' + pos.lng +
+            '&radius=' + radius + '&type=' + type + '&keyword=' + keyword + '&key=' + api_key;
+
+        $.ajax({
+            url: apiURL,
+            data: {
+                url: queryURL
+            },
+            dataType: 'json',
+            method: 'POST'
+
+        }).done(function (response) {
+            map.setZoom(12);
+
+            for (var i = 0; i < response.data.results.length; i++) {
+                createMarker(response.data.results[i]);
+            }
+
+        });
+    });
+    $('#pac-input').val('');
+}
+
+// Side nav setup
+$('.button-collapse').sideNav({
+    menuWidth: 90,
+    edge: 'left',
+    closeOnClick: true, // Closes side-nav on <a> clicks
+    draggable: true, // drag to open on touch screens,
+});
+$('.button-collapse').on("click", function(){
+    $("#settings-options, #login-options, .searchbar").fadeOut();
+});
