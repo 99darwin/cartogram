@@ -13,11 +13,7 @@ body {
 	position: absolute;
 	bottom: 0;
 	z-index: 2;
-
-	
-
 	color: white;
-
 }
 
 .searchbar {
@@ -25,16 +21,12 @@ body {
 }
 
 .topbar, .toolbar {
-	/*background: rgba(250, 128, 114, 0.2);*/
-	background-color: rgba(84, 110, 122, 0.75)!important;
+	/*background: rgba(250, 128, 114, 0.2);
+	background-color: rgba(84, 110, 122, 0.75);*/
 	width: 100%;
 	position: absolute;
 	z-index: 2;
-
 	font-family: 'Kaushan Script', cursive;
-
-	opacity: 1;
-	transition: 0.3s linear opacity;
 }
 
 .toolbar {
@@ -55,22 +47,32 @@ body {
 	padding: 4px 10px;
 	cursor: pointer;
 }
-#login-options div:hover{
+#login-options div:hover,
+#history-bar p:hover{
 	background-color: rgba(0, 0, 0, 0.1);
 }
 
+ul#slide-out a i{
+	text-align: center;
+	cursor: pointer;
+	color: #5f7c88;
+}
+
 /* logged in items */
-#avatar{
+.avatar{
 	display: none;
 	height: 65px;
 	padding: 9px;
+	margin: auto;
 }
-#settings-button, #logout-button{
+
+li>a.settings-button, li>a.logout-button, li>a.history-button, #history-bar{
 	display: none;
 }
 
-.brand-logo{
+nav .brand-logo.center{
 	text-shadow: 1px 1px 3px #383f42;
+	font-size: 3.8rem;
 }
 
 #settings-options{
@@ -100,7 +102,7 @@ body {
 #settings-options input[type="submit"]:hover{
 	color: #383f42;
 	background: white;
-
+	-border-color: #26a69a;
 }
 
 /*nav ul a {
@@ -115,64 +117,125 @@ body {
 	overflow: visible;
 }
 
-#widget-bar {
+#widget-bar, #history-bar {
 	right: 10px;
-	top: 70px;
+	bottom: 74px;
 	width: 350px;
-	height: calc(100vh - 140px);
-	margin-bottom: 25px;
+	max-height: calc(100vh - 146px);
 	position: absolute;
 	z-index: 3;
-	overflow: scroll;
+	overflow-y: scroll;
 }
 
-#widget-bar::-webkit-scrollbar {
+#widget-bar::-webkit-scrollbar,
+#history-bar::-webkit-scrollbar {
 	width: 0px;
 }
 
-#widget-bar::-webkit-scrollbar-track-piece {
+#widget-bar::-webkit-scrollbar-track-piece,
+#history-bar::-webkit-scrollbar-track-piece {
 	background-color: transparent;
 	-webkit-border-radius: 6px;
 }
 
+#history-bar p{
+	padding: 6px;
+	cursor: pointer;
+}
+
 .blue-ish{
 	background-color: rgba(84, 110, 122, 0.75);
+	transition: 0.2s linear background-color;
 }
 
-.card.blue-ish.darken-1 {
-	transition: 0.2s linear background-color; 
+#menu-button{
+	display: none;
 }
 
-.card.blue-ish.darken-1:hover {
+/* .card.blue-ish.darken-1:hover {
 	background-color: rgba(84, 110, 122, 0.45);
-}
+} */
 
 /* map tweaks */
-#map div div.gm-style:nth-child(1) div:nth-child(7),
-#map div div.gm-style:nth-child(1) div:nth-child(8){
-	-display: none; !important;
+#map > div > div.gm-style:nth-child(1) > div.gmnoprint:nth-child(4),
+#map > div > div.gm-style:nth-child(1) > div.gmnoprint:nth-child(6),
+#map > div > div.gm-style:nth-child(1) > div:nth-child(2){
+	bottom: 62px !important;
+}
+#map > div > div.gm-style:nth-child(1) > div:nth-child(7),
+#map > div > div.gm-style:nth-child(1) > div:nth-child(8){
+	display: none;
 	top: 0px;
 }
-div.gm-style div.gmnoprint:nth-child(9){
+div.gm-style > div.gmnoprint:nth-child(9){
 	left: 0px !important;
-	bottom: 157px !important;
+	bottom: 177px !important;
 }
-div.gm-style div.gmnoprint:nth-child(11){
+div.gm-style > div.gmnoprint:nth-child(11){
 	top: 63px !important;
 }
 
 /* streetview */ 
-#map div div.gm-style:nth-child(2) div:nth-child(7){
+#map > div > div.gm-style:nth-child(2) > div:nth-child(7){
 	display: none !important;
 }
-#map div div.gm-style:nth-child(2) div:nth-child(8){
+#map > div > div.gm-style:nth-child(2) > div:nth-child(8){
 	left: 0px !important;
 	bottom: 119px !important;
 }
-#map div div.gm-style:nth-child(2) div:nth-child(9), 
-#map div div.gm-style:nth-child(2) div:nth-child(10){
+#map > div > div.gm-style:nth-child(2) > div:nth-child(9), 
+#map > div > div.gm-style:nth-child(2) > div:nth-child(10){
 	top: 63px !important;
 }
 div.gm-style div div.gm-iv-address{
 	height: auto !important;
+}
+
+@media screen and (max-width: 600px){
+	#menu-button{
+		display: block;
+	}
+	.topbar .brand-logo.center{
+		font-size: 3.4rem;
+	}
+	.toolbar{
+		height: 0px;
+		overflow: hidden;
+	}
+	#widget-bar, #history-bar{
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		padding: 0px 5px;
+		max-height: 50vh;
+	}
+	#login-options, #settings-options{
+		bottom: auto;
+		top: 53px;
+		width: 96%;
+		left: 2%
+	}
+	form.searchbar{
+		position: fixed;
+		top: 60px;
+		left: 0px;
+		background-color: rgba(84, 110, 122, 0.75);
+		width: 90%;
+		margin: 5%;
+		padding: 5px 20px;
+		height: 70px;
+		border-radius: 3px;
+	}
+	/* map hacks */
+	#map > div > div.gm-style:nth-child(1) > div.gmnoprint:nth-child(4),
+	#map > div > div.gm-style:nth-child(1) > div.gmnoprint:nth-child(6),
+	#map > div > div.gm-style:nth-child(1) > div:nth-child(2){
+		bottom: 50vh !important;
+	}
+	div.gm-style > div.gmnoprint:nth-child(9){
+		display: none;
+	}
+	div.gm-style > div.gmnoprint:nth-child(11){
+		top: 53px !important;
+	}
 }

@@ -23,27 +23,42 @@
 <body>
 
     <!-- <div class="container"> -->
-    <nav class="topbar transparent z-depth-0">
+    <nav class="blue-ish topbar z-depth-1">
         <div class="nav-wrapper">
             <span href="#" class="brand-logo center">Cartogram</span>
+            <a id="menu-button" data-activates="slide-out" class="left button-collapse"><i class="fa fa-bars fa-2x"></i></a>
         </div>
     </nav>
-    <nav class="toolbar">
+    <nav class="blue-ish toolbar">
         <div class="nav-wrapper">
             <ul id="nav-mobile1" class="left">
-                <li><a id="login-button"><i class="fa fa-sign-in fa-2x"></i></a></li>
-                <li><img id="avatar"></li>
-                <li><a id="settings-button"><i class="fa fa-cog fa-2x"></i></a></li>
-                <li><a id="logout-button"><i class="fa fa-sign-out fa-2x"></i></a></li>
+                <li><a class="login-button"><i class="fa fa-sign-in fa-2x"></i></a></li>
+                <li><img class="avatar circle"></li>
+                <li><a class="settings-button"><i class="fa fa-cog fa-2x"></i></a></li>
+                <li><a class="logout-button"><i class="fa fa-sign-out fa-2x"></i></a></li>
             </ul>
             <ul id="nav-mobile2" class="right center">
-                <li><a><i class="fa fa-map-marker fa-2x"></i></a></li>
-                <li><a><i id="searchicon" class="fa fa-search fa-2x"></i></a></li>
-                <li><a><form class="searchbar"><input type="text" placeholder="Search"><input type="submit" value="go"></form></a></li>
-                <li><a><i class="fa fa-history fa-2x"></i></a></li>
+                <li><a class="mapMarker"><i class="fa fa-map-marker fa-2x"></i></a></li>
+                <li><a class="searchicon"><i class="fa fa-search fa-2x"></i></a></li>
+                <li><a><form class="searchbar"><input id="pac-input" class="controls" type="text" placeholder="Search"><input id="submit" type="submit" value="go"></form></a></li>
+                <li><a class="history-button"><i class="fa fa-history fa-2x"></i></a></li>
             </ul>
         </div>
     </nav>
+    <!-- mobile -->
+    <ul id="slide-out" class="side-nav">
+        <li><a><i class="fa fa-bars fa-2x"></i></a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="login-button"><i class="fa fa-sign-in fa-2x"></i></a></li>
+        <li><img class="avatar circle"></li>
+        <li><a class="settings-button"><i class="fa fa-cog fa-2x"></i></a></li>
+        <li><a class="logout-button"><i class="fa fa-sign-out fa-2x"></i></a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="mapMarker"><i class="fa fa-map-marker fa-2x"></i></a></li>
+        <li><a class="searchicon"><i class="fa fa-search fa-2x"></i></a></li>
+        <li><a class="history-button"><i class="fa fa-history fa-2x"></i></a></li>
+    </ul>
+    <!-- -->
     <div id="login-options" class="blue-ish card">
         <div id="google-login">
             <i class="fa fa-google fa-2x"></i> Sign in with Google
@@ -54,17 +69,25 @@
     </div>
     <div id="settings-options" class="blue-ish card">
         <form id="settings-save">
-            <label><input id="history-checkbox" type="checkbox" checked> Save my location history</label>
+            <div class="switch">
+                <label><input id="history-checkbox" type="checkbox"><span class="lever"></span> Save my location history</label>
+            </div>
             <hr>
-            <label><input id="weather-checkbox" type="checkbox"> Show Weather Widget</label>
-            <label><input id="farmers-checkbox" type="checkbox"> Show Farmer's Market Widget</label>
-            <label><input id="another-checkbox" type="checkbox"> Show Other Widget</label>
+            <div class="switch">
+                <label><input id="weather-checkbox" type="checkbox"><span class="lever"></span> Show Weather Widget</label>
+            </div>
+            <div class="switch">
+                <label><input id="farmers-checkbox" type="checkbox"><span class="lever"></span> Show Farmer's Market Widget</label>
+            </div>
+            <div class="switch">
+                <label><input id="another-checkbox" type="checkbox"><span class="lever"></span> Show Other Widget</label>
+            </div>
             <input type="submit" value="Save Settings">
         </form>
     </div>
     <div id="map"></div>
     <div id="widget-bar">
-        <div class="card widget blue-ish darken-1">
+        <div id="location-widget" class="card widget blue-ish darken-1">
             <div class="card-content white-text">
                 <span class="card-title">Location</span>
                 <p>You are here: <span id="location"></span></p>
@@ -74,29 +97,32 @@
                 <a href="#">This is a link</a>
             </div> -->
         </div>
-        <div class="card blue-ish darken-1">
+        <div id="weather-widget" class="card widget blue-ish darken-1">
             <div class="card-content white-text">
                 <span class="card-title"><span id="weather-icon" style="float: right;"></span>Weather</span>
                 <p><span id="weatherData"></span></p>
             </div>
         </div>
-        <div class="card blue-ish darken-1">
+        <div id="farmers-widget" class="card widget blue-ish darken-1">
             <div class="card-content white-text">
                 <span class="card-title">Local Farmer's Markets</span>
                 <p><span id="farmersData"></span></p>
             </div>
         </div>
-        <!-- <script type="text/javascript" src="assets/js/app.js"></script> -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-        <script src="https://use.fontawesome.com/62f4e174f3.js"></script>
-        <script type="text/javascript" src="assets/js/maps.js"></script>
-        <script type="text/javascript" src="assets/js/api-weather.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYvm6i_3YLimMJdS6BAHLKWLW9g723m8o&libraries=places&callback=initMapLocationPlaces" async defer></script>
-        <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
-        <script type="text/javascript" src="assets/js/user.js"></script>
-        <script type="text/javascript" src="assets/js/search.js"></script>
-    </body>
+    </div>
+    <div id="history-bar">
+    </div>
+    <!-- <script type="text/javascript" src="assets/js/app.js"></script> -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://use.fontawesome.com/62f4e174f3.js"></script>
+    <script type="text/javascript" src="assets/js/maps.js"></script>
+    <script type="text/javascript" src="assets/js/api-weather.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYvm6i_3YLimMJdS6BAHLKWLW9g723m8o&libraries=places&callback=initMapLocationPlaces" async defer></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <script type="text/javascript" src="assets/js/user.js"></script>
+    <script type="text/javascript" src="assets/js/search.js"></script>
+</body>
 
 </html>
